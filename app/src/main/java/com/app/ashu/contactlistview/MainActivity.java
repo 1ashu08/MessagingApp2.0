@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         inActiveMember=(ListView)findViewById(R.id.inActiveMember);
         activeMember=(ListView)findViewById(R.id.activeMember);
 
+
+
         button = (Button)findViewById(R.id.button1);
 
 
