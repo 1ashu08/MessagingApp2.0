@@ -10,11 +10,14 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import com.app.ashu.contactlistview.utility.CreateContactList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public  static final int RequestPermissionCode  = 1 ;
     Button button;
     TextView txtView;
+    EditText searchBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         //activeMember = (RecyclerView)findViewById(R.id.activeMember);
         inActiveMember=(ListView)findViewById(R.id.inActiveMember);
         activeMember=(ListView)findViewById(R.id.activeMember);
-
+        searchBox=(EditText)findViewById(R.id.searchBox);
 
 
         button = (Button)findViewById(R.id.button1);
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                 HashMap<String,ArrayList<String>> list=createList.getContactList(MainActivity.this);
                 activeContacts=list.get("Active");
+                permanentActieList=createList.getContactList(MainActivity.this).get("Active");
                 inActiveContacts=list.get("InActive");
                 //GetContactsIntoArrayList();
                 //new ArrayAdapter<String>();
@@ -124,14 +130,79 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        activeMember.setMinimumHeight(activeContacts.size()*100);
 
-        //activeMember
+        searchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //System.out.println("Before Chage");
+            }
 
-        //ListUtils.setDynamicHeight(activeMember);
-        //ListUtils.setDynamicHeight(inActiveMember);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text=searchBox.getText().toString();
+
+                /*if(text!=null)
+                {
+                    prepareSearchedList(text);
+                }
+                else
+                {
+                    activeContacts=permanentActieList;
+                    activeContactAdapter.notifyDataSetChanged();
+                }*/
+                //System.out.println("On Chage");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(activeContactAdapter!=null)
+                {
+                    String text=searchBox.getText().toString();
+
+                    if(text!=null && text.length()>0)
+                    {
+                        System.out.println("In if ");
+                        prepareSearchedList(text);
+                        setDynamicHeight(activeMember);
+                    }
+                    else
+                    {
+                        System.out.println("In else block");
+                        activeContacts.clear();
+                        System.out.println(permanentActieList.size());
+                        for(int i=0;i<permanentActieList.size();i++)
+                            activeContacts.add(permanentActieList.get(i));
+                        activeContactAdapter.notifyDataSetChanged();
+                        setDynamicHeight(activeMember);
+                    }
+                }
+
+                //System.out.println("After Chage");
+            }
+        });
+
 
     }
+    ArrayList<String> permanentActieList=new ArrayList<String>();
+    public void prepareSearchedList(String text)
+    {
+        ArrayList<String> newList=new ArrayList<String>();
+        for(String data:permanentActieList)
+        {
+            text= text.toLowerCase();
+            data=data.toLowerCase();
+            if(data.contains(text))
+            {
+                newList.add(data);
+            }
+        }
+        System.out.println("Size is "+newList.size());
+        activeContacts.clear();
+        for(int i=0;i<newList.size();i++)
+            activeContacts.add(newList.get(i));
+        activeContactAdapter.notifyDataSetChanged();
+    }
+
 
     public static void setDynamicHeight(ListView listView) {
         ListAdapter adapter = listView.getAdapter();
