@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else
                     {
-                        System.out.println("In else block");
+                        //System.out.println("In else block");
                         activeContacts.clear();
                         System.out.println(permanentActieList.size());
                         for(int i=0;i<permanentActieList.size();i++)
