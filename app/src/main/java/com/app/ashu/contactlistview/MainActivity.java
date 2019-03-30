@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String,ArrayList<String>> list=createList.getContactList(MainActivity.this);
                 activeContacts=list.get("Active");
                 permanentActieList=createList.getContactList(MainActivity.this).get("Active");
+
                 inActiveContacts=list.get("InActive");
                 //GetContactsIntoArrayList();
                 //new ArrayAdapter<String>();
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 String text=searchBox.getText().toString();
 
                 /*if(text!=null)
@@ -155,13 +157,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if(activeContactAdapter!=null)
                 {
                     String text=searchBox.getText().toString();
 
                     if(text!=null && text.length()>0)
                     {
-                        System.out.println("In if ");
+                        //System.out.println("In if ");
                         prepareSearchedList(text);
                         setDynamicHeight(activeMember);
                     }
@@ -169,10 +172,11 @@ public class MainActivity extends AppCompatActivity {
                     {
                         //System.out.println("In else block");
                         activeContacts.clear();
-                        System.out.println(permanentActieList.size());
+                        //System.out.println(permanentActieList.size());
                         for(int i=0;i<permanentActieList.size();i++)
                             activeContacts.add(permanentActieList.get(i));
                         activeContactAdapter.notifyDataSetChanged();
+
                         setDynamicHeight(activeMember);
                     }
                 }
@@ -196,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 newList.add(data);
             }
         }
-        System.out.println("Size is "+newList.size());
+        //System.out.println("Size is "+newList.size());
         activeContacts.clear();
         for(int i=0;i<newList.size();i++)
             activeContacts.add(newList.get(i));
